@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+  <title>System Flow</title>
+</head>
+<body>
+	<div class="container">
+		<div class="page-header">
+			<h1>Imaging System + Networking</h1>
+			<h2>System Flow</h2>
+		</div>
+
+		
+		<!---------------------------------------------------------------------------------------------------------------------->
+		<!---------------------------------------------------- SERVER ---------------------------------------------------------->
+		<div class="row">	
+			<div class="container">
+			<button type="button" class="btn btn-info btn-block" data-toggle="collapse" data-target="#server">Server</button>
+			<div id="server" class="collapse">
+				<h4>~/bin/software/ruby/server.rb</h4>
+				<ul class="list-group">
+					<li class="list-group-item">This code has to be run first before any client code</li>
+				</ul>
+			</div>
+			</div>
+		</div>
+		
+		<br>
+		<!---------------------------------------------------------------------------------------------------------------------->
+		<!---------------------------------------------------- MASTER ---------------------------------------------------------->
+		
+		<div class="row">	
+			<div class="container">
+				<button type="button" class="btn btn-info btn-block" data-toggle="collapse" data-target="#master">Master</button>
+				<div id="master" class="collapse">
+					<h4>~/bin/software/ruby/master.rb</h4>
+					<ul class="list-group">
+						<li class="list-group-item">Master will be executed right after the Client Pi finish the boots sequence</li>
+						<li class="list-group-item">Every code from the client side will be called from this master program</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+  
+		<br>
+		<!---------------------------------------------------------------------------------------------------------------------->
+		<!--------------------------------------------------- UPDATER ---------------------------------------------------------->
+		
+		<div class="row">	
+			<div class="container">
+				<button type="button" class="btn btn-info btn-block" data-toggle="collapse" data-target="#updater">Updater</button>
+				<div id="updater" class="collapse">
+					<h4>~/bin/software/ruby/updater.rb</h4>
+					<ul class="list-group">
+						<li class="list-group-item">Updater will retrieve the latest version of code from the server</li>
+						<li class="list-group-item">Everything in the ~/bin/software will be updated</li>
+						<li class="list-group-item">There will be 3 seconds timeout in the updater</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		
+		<br>
+		<!---------------------------------------------------------------------------------------------------------------------->
+		<!--------------------------------------------------- CLIENT ---------------------------------------------------------->
+		
+		<div class="row">	
+			<div class="container">
+				<button type="button" class="btn btn-info btn-block" data-toggle="collapse" data-target="#client">Client</button>
+				<div id="client" class="collapse">
+					<h4>~/bin/software/ruby/client.rb</h4>
+					<ul class="list-group">
+						<li class="list-group-item">Client will transfer all the photos from previous iteration to the server</li>
+						<li class="list-group-item">Once it successfully transferred all the photos, the photos will be deleted from the Client Pi</li>
+						<li class="list-group-item">There will be x seconds timeout in the transferring the photo</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		
+		<br>
+		<!---------------------------------------------------------------------------------------------------------------------->
+		<!--------------------------------------------------- SLEEPY PI -------------------------------------------------------->
+		
+		<div class="row">	
+			<div class="container">
+				<button type="button" class="btn btn-info btn-block" data-toggle="collapse" data-target="#sleepypi">Sleepy Pi</button>
+				<div id="sleepypi" class="collapse">
+					<h4>~/bin/software/python/SleepyPi.py</h4>
+					<ul class="list-group">
+						<li class="list-group-item">Raspberry Pi communicate with the Sleepy Pi attached to it through this program</li>
+						<li class="list-group-item">This program used two GPIO pins (GPIO 24 and GPIO 25) to signal the current condition to Sleepy Pi.<br>
+							Below the the list of condition that this program used:<br>
+							<ul>
+							  <li>SHUTDOWN</li>
+							  <li>RUNNING</li>
+							  <li>START OF THE DAY</li>
+							  <li>LAST ITERATION</li>
+							  <li>USER SESSION</li>
+							</ul>
+						</li>
+						<li class="list-group-item">Other thing that this program do is to get the configuration from program.conf 
+							and call the Main.py based on that configuration<br>
+							Below are the list of configuration that can be modified from the server or from the client itself:<br>
+							<ul>
+							  <li>Work Hour</li>
+							  <li>Photo per Hour</li>
+							</ul>
+						</li>
+						<li class="list-group-item">After the Main.py finished its execution, the SleepyPi.py will send a SHUTDOWN signal to SleepyPi and shutdown the RaspberryPi</li>
+						<li class="list-group-item">After 10 minutes, SleepyPi will power up the RaspberryPi again to begin a new iteration</li>
+
+					</ul>
+				</div>
+			</div>
+		</div>
+		
+		<br>
+		
+		<!---------------------------------------------------------------------------------------------------------------------->
+		<!------------------------------------------------------ MAIN ---------------------------------------------------------->
+		
+		<div class="row">	
+			<div class="container">
+				<button type="button" class="btn btn-info btn-block" data-toggle="collapse" data-target="#main">Main</button>
+				<div id="main" class="collapse">
+					<h4>~/bin/software/python/Main.py</h4>
+					<ul class="list-group">
+						<li class="list-group-item">The main task of this program is to interact with all the cameras attached to the Raspberry Pi</li>
+						<li class="list-group-item">First it will try to detect all the cameras attached to the usb port and record the latest camera information in latest_camera.info</li>
+						<li class="list-group-item">Then, it will call the <strong>download_photo.py</strong> to download the latest photo from all the cameras to the Client Pi<br>
+							There will be a 3 minute timeout for this.
+						</li>
+						<li class="list-group-item">Lastly the Main.py will send command to each of the cameras to take picture<br>
+							And there also will be a 3 minute timeout for this task.
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		
+		<hr>
+
+		<div class="footer">
+		<small>Schnable Lab 2016</small>
+		</div>				
+		
+	</div>
+
+</body>
+</html>

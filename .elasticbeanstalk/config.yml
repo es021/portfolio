@@ -1,0 +1,11 @@
+branch-defaults:
+  master:
+    environment: zulsarhan
+    group_suffix: null
+global:
+  application_name: MyPortfolio
+  default_ec2_keyname: null
+  default_platform: PHP
+  default_region: us-west-2
+  profile: eb-cli
+  sc: git
