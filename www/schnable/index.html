@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.js"></script>
+
+  <link rel="stylesheet" href="lib/bootstrap-3.3.7/css/bootstrap.min.css">
+  <script src="lib/jquery-1.12.4.min.js"></script>
+  <script src="lib/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="lib/style.css">
+
+  <script src="js/app.js"></script>
+
+
+  <title>Imaging System + Networking</title>
+</head>
+
+<body ng-app="myApp" ng-controller="AppController">
+
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="" ng-click="goTo('home')">Imaging System + Networking</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      
+      <ul class="nav navbar-nav">
+        
+        <li id="system_flow"><a href="" ng-click="goTo('system_flow')">System Flow</a></li>
+        <li id="code"><a href="" ng-click="goTo('code')">Code</a></li>
+        <li id="team"><a href="" ng-click="goTo('team')">Team</a></li>
+
+      </ul>
+
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+	<div ng-view></div>
+	
+  <hr>
+	<div class="footer">
+		<small>Schnable Lab 2016</small>
+    <br><br>
+	</div>				
+		
+</body>
+</html>

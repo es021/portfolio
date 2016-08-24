@@ -1,0 +1,269 @@
+<div class="container text-center">
+	<h2>System Flow</h2><hr>
+
+		
+		<!------------------------------------------------------------------------------------------------------------------------->
+		<!---------------------------------------------------- SERVER PI ---------------------------------------------------------->
+		<div class="row">	
+			<div class="container">
+			<button type="button" class="btn btn-primary btn-block" data-toggle="collapse" data-target="#server">Server Pi</button>
+			<div id="server" class="text-left">
+				<ul class="list-group">
+					<a name="server.profile"></a>					
+					<li class="list-group-item">
+						<h4>.profile<br><small>/home/pi/.profile</small></h4>
+						<ul>
+							<li>This program will be run automatically once <strong>Server Pi</strong> boots up successfully</li>
+							<li>What happenend in <strong>server's .profile</strong>?
+								<ul>
+									<li>Set up Server Pi ip address</li>
+									<li>Mounted the hard disk</li>
+									<li>Call <strong><a href="" ng-click="goToAnchor('server.rb')" >server.rb</a></strong> program</li>
+								</ul><br>
+
+<pre><code>sudo ifconfig eth0 169.254.0.4
+sudo /home/pi/bin/other/mount_wd.sh
+sudo ruby /home/pi/bin/software/ruby/server.rb</pre></code>
+
+							</li>
+						</ul>
+
+					</li>
+
+					<a name="server.rb"></a>
+					<li class="list-group-item">
+						<h4>server.rb<br><small>/home/pi/bin/software/ruby/server.rb</small></h4>
+						<ul>
+							<li>This program has to be run first before any client code</li>
+							<li>Once the server has started, user can go to <strong>server terminal</strong> by typing the following : <br>
+							<pre><code>screen -raAd</code></pre></li>
+						</ul>
+					</li>
+
+				</ul>
+			</div>
+			</div>
+		</div>
+		
+		<br>	
+
+		<!------------------------------------------------------------------------------------------------------------------------->
+		<!---------------------------------------------------- CLIENT PI ---------------------------------------------------------->
+		<div class="row">	
+			<div class="container">
+			<button type="button" class="btn btn-success btn-block" data-toggle="collapse" data-target="#client">Client Pi</button>
+			<div id="client" class="text-left">
+				<ul class="list-group">
+
+					<!--######################################################.PROFILE ###################################################-->					
+					<a name="client.profile"></a>					
+					<li class="list-group-item">
+						<h4>.profile<br><small>/home/pi/.profile</small></h4>
+						<ul>
+							<li>This program will be run automatically once <strong>Client Pi</strong> boots up successfully</li>
+							<li>What happenend in <strong>client's .profile</strong>?
+								<ul>
+									<li>Call <strong><a href="" ng-click="goToAnchor('master.rb')" >master.rb</a></strong> program</li>
+								</ul><br>
+
+								<pre><code>sudo ruby /home/pi/bin/software/ruby/master.rb</pre></code>
+
+							</li>
+						</ul>
+					</li>
+
+
+					<!--###################################################### MASTER ###################################################-->					
+					<a name="master.rb"></a>
+					<li class="list-group-item">
+						<h4>master.rb<br><small>/home/pi/bin/software/ruby/master.rb</small></h4>
+						<ul>
+							<li>This is the master program that will call all other programs from client side</li>
+							<li>What happenend in <strong>master.rb</strong>?
+								<ol>
+									
+									<li>Get program configuration from 
+										<strong><a href="" ng-click="goToAnchor('program.conf')" >program.conf</a></strong></li>
+									<li>Random delay before communication with server started.
+										<small class="text-muted"><ul>
+											<li>To give some time for ethernet connection to be established</li>
+										</ul></small>
+									</li>
+										
+									<li>Run <strong><a href="" ng-click="goToAnchor('client.rb')" >client.rb</a></strong>.</li>
+									
+									<li>Run <strong><a href="" ng-click="goToAnchor('program_info.py')" >program_info.py</a></strong>.
+										<small class="text-muted"><ul>
+											<li>Just printing out the current program info and configuration. Nothing special here</li>
+										</ul></small>
+									</li>
+
+									<li>Check if <strong>user_session</strong> is set to 'y' in <strong>program configuration</strong>
+										<small class="text-muted"><ul>
+											<li>If yes, exit program immediately.</li>
+											<li>Else, continue.</li>
+										</ul></small>
+									</li>
+
+									<li>Charge camera
+										<small class="text-muted"><ul>
+											<li>The camera will be charged for 5 minutes, which is the default.</li>
+											<li>The default charge time can be change in <strong><a href="" ng-click="goToAnchor('SleepyPi.py')" >SleepyPi.py</a></strong>.</li>
+										</ul></small>
+									</li>
+
+									<li>Run <strong><a href="" ng-click="goToAnchor('SleepyPi.py')" >SleepyPi.py</a></strong>.</li>
+
+								</ol>
+							</li>
+						</ul>
+					</li>
+
+					<!--###################################################### CLIENT ###################################################-->					
+					<a name="client.rb"></a>
+					<li class="list-group-item">
+						<h4>client.rb<br><small>/home/pi/bin/software/ruby/master.rb</small></h4>
+						<ul>
+							<li>This program is the only way for client to communicate with the server</li>
+							<li>What happenend in <strong>client.rb</strong>?
+								<ol>
+									<li>Send client's information to the server</li>
+									<li>Transfer maximum of 5 photos from client's local directory to the server
+										<small class="text-muted"><ul>
+											<li>Photos that had been successfully transferred, will be deleted from Client Pi local directory</li>
+										</ul></small>
+									</li>
+									<li>Transfer client.info file to the server</li>
+									<li>If the Server Pi see the client for the first time since
+										<strong><a href="" ng-click="goToAnchor('server.rb')" >server.rb</a></strong>
+										started, the client will automatically run 
+										<strong><a href="" ng-click="goToAnchor('updater.rb')" >updater.rb</a></strong>
+									to get the latest updated code from the server</li>
+
+									<li>There will be a timeout in connecting to the server</li>
+										<small class="text-muted"><ul>
+											<li>If fail to connect, the Client Pi will continue the execution normally</li>
+										</ul></small>
+
+								</ol>
+							</li>
+						</ul>
+					</li>
+
+					<!--###################################################### UPDATER ###################################################-->					
+					<a name="updater.rb"></a>
+					<li class="list-group-item">
+						<h4>updater.rb<br><small>/home/pi/bin/software/ruby/updater.rb</small></h4>
+						<ul>
+							<li>Updater will retrieve the files from the server's <strong>/home/pi/bin/software</strong> directory</li>
+							<li>This includes all <strong>python and ruby codes</strong> as well as the <strong>program configuration</strong> file</li>
+						</ul>
+					</li>
+
+					<!--###################################################### PROGRAM INFO ################################################-->					
+					<a name="program_info.py"></a>
+					<li class="list-group-item">
+						<h4>program_info.py<br><small>/home/pi/bin/software/python/program_info.py</small></h4>
+						<ul>
+							<li>Updater will retrieve the files from the server's <strong>/home/pi/bin/software</strong> directory</li>
+							<li>This includes all <strong>python and ruby codes</strong> as well as the <strong>program configuration</strong> file</li>
+							<li>What can <strong>program_info.py</strong> do?</li>
+
+<pre><code>Print Program Configuration<ul><li>sudo python program_info.py</li></ul>
+Change Program Configuration<ul><li>sudo python program_info.py --update-conf</li></ul>							
+Change Program Command<ul><li>sudo python program_info.py --update-command</li></ul></code></pre>							
+							
+							<li>Extra Commands. The following commands were called from <strong><a href="" ng-click="goToAnchor('SleepyPi.py')" >SleepyPi.py</a></strong> according to the configuration set in Server's terminal</li>
+
+<pre><code>sudo python program_info.py --work-hour [INTEGER]
+sudo python program_info.py --user-session [y/n]
+sudo python program_info.py --delete-all-photos [y/n]
+sudo python program_info.py --reset [y/n]
+sudo python program_info.py --reset-iteration [y/n]
+sudo python program_info.py --download-all-photos [y/n]
+sudo python program_info.py --abort [y/n]
+sudo python program_info.py --charge-all [y/n]</code></pre>	
+
+						</ul>
+					</li>
+
+
+					<!--###################################################### SLEEPY PI ###################################################-->					
+					<a name="SleepyPi.py"></a>
+					<li class="list-group-item">
+						<h4>SleepyPi.py<br><small>/home/pi/bin/software/python/SleepyPi.py</small></h4>
+						<ul>
+							<li>Updater will retrieve the files from the server's <strong>/home/pi/bin/software</strong> directory</li>
+							<li>This includes all <strong>python and ruby codes</strong> as well as the <strong>program configuration</strong> file</li>
+						</ul>
+					</li>
+
+
+
+				</ul>
+			</div>
+			</div>
+		</div>
+		
+		<br>
+
+		<!---------------------------------------------------------------------------------------------------------------------->
+		<!--------------------------------------------------- SLEEPY PI -------------------------------------------------------->
+		
+		<div class="row">	
+			<div class="container">
+				<button type="button" class="btn btn-success btn-block" data-toggle="collapse" data-target="#sleepypi">Sleepy Pi</button>
+				<div id="sleepypi" class="collapse text-left">
+					<h4>~/bin/software/python/SleepyPi.py</h4>
+					<ul class="list-group">
+						<li class="list-group-item">Raspberry Pi communicate with the Sleepy Pi attached to it through this program</li>
+						<li class="list-group-item">This program used two GPIO pins (GPIO 24 and GPIO 25) to signal the current condition to Sleepy Pi.<br>
+							Below the the list of condition that this program used:<br>
+							<ul>
+							  <li>SHUTDOWN</li>
+							  <li>RUNNING</li>
+							  <li>START OF THE DAY</li>
+							  <li>LAST ITERATION</li>
+							  <li>USER SESSION</li>
+							</ul>
+						</li>
+						<li class="list-group-item">Other thing that this program do is to get the configuration from program.conf 
+							and call the Main.py based on that configuration<br>
+							Below are the list of configuration that can be modified from the server or from the client itself:<br>
+							<ul>
+							  <li>Work Hour</li>
+							  <li>Photo per Hour</li>
+							</ul>
+						</li>
+						<li class="list-group-item">After the Main.py finished its execution, the SleepyPi.py will send a SHUTDOWN signal to SleepyPi and shutdown the RaspberryPi</li>
+						<li class="list-group-item">After 10 minutes, SleepyPi will power up the RaspberryPi again to begin a new iteration</li>
+
+					</ul>
+				</div>
+			</div>
+		</div>
+		
+		<br>
+		
+		<!---------------------------------------------------------------------------------------------------------------------->
+		<!------------------------------------------------------ MAIN ---------------------------------------------------------->
+		
+		<div class="row">	
+			<div class="container">
+				<button type="button" class="btn btn-secondary btn-block" data-toggle="collapse" data-target="#main">Main</button>
+				<div id="main" class="collapse text-left">
+					<h4>~/bin/software/python/Main.py</h4>
+					<ul class="list-group">
+						<li class="list-group-item">The main task of this program is to interact with all the cameras attached to the Raspberry Pi</li>
+						<li class="list-group-item">First it will try to detect all the cameras attached to the usb port and record the latest camera information in latest_camera.info</li>
+						<li class="list-group-item">Then, it will call the <strong>download_photo.py</strong> to download the latest photo from all the cameras to the Client Pi<br>
+							There will be a 3 minute timeout for this.
+						</li>
+						<li class="list-group-item">Lastly the Main.py will send command to each of the cameras to take picture<br>
+							And there also will be a 3 minute timeout for this task.
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+</div>
