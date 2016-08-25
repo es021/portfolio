@@ -108,7 +108,7 @@ sudo ruby /home/pi/bin/software/ruby/server.rb</pre></code>
 									<li>Charge camera
 										<small class="text-muted"><ul>
 											<li>The camera will be charged for 5 minutes, which is the default.</li>
-											<li>The default charge time can be change in <strong><a href="" ng-click="goToAnchor('SleepyPi.py')" >SleepyPi.py</a></strong>.</li>
+											<li>The default charge time can be change in <strong><a href="" ng-click="goToAnchor('Main.py')" >Main.py</a></strong>.</li>
 										</ul></small>
 									</li>
 
@@ -193,77 +193,129 @@ sudo python program_info.py --charge-all [y/n]</code></pre>
 					<li class="list-group-item">
 						<h4>SleepyPi.py<br><small>/home/pi/bin/software/python/SleepyPi.py</small></h4>
 						<ul>
-							<li>Updater will retrieve the files from the server's <strong>/home/pi/bin/software</strong> directory</li>
-							<li>This includes all <strong>python and ruby codes</strong> as well as the <strong>program configuration</strong> file</li>
+							<li>SleepyPi.py is the only place where The RPi <strong>communicate with the Sleepy Pi</strong> attached to it.</li>
+							<li>This program used two GPIO pins (GPIO 24 and GPIO 25) to signal the current condition/state to Sleepy Pi</li>
+							<li>
+								Below are the list of conditions that is used in this program :<br>
+								<ul>
+								  <li>SHUTDOWN</li>
+								  <li>RUNNING</li>
+								  <li>START OF THE DAY</li>
+								  <li>LAST ITERATION</li>
+								  <li>USER SESSION</li>
+								</ul>
+							</li>
+							<li>What exactly happened in <strong>SleepyPi.py</strong>?
+								<ol>
+									<li>The program starts off by initializing the program configuration that is stored in <strong>program.conf</strong> and assign it to <strong>PROGRAM_JSON</strong> constant</li>
+									<li>Check if there is any extra argument given.<br>
+										There are 2 type of argument that this program can receive : 
+<pre><code>python SleepyPi.py --set-condition [condition]
+python SleepyPi.py --charge-default
+</code></pre>
+									</li>
+									<li>If there is no argument given, start the default execution for this program</li>
+								</ol>
+
+							</li>
+							<br>
+							<li><h4>Default Execution</h4>
+								<ol>
+									<li>Firstly execute all command that is set to 'y' in <strong>PROGRAM_JSON</strong></li>
+									<li>Set Condition to RUNNING
+										<small class="text-muted"><ul>
+											<li>Set the GPIO pins accordingly so that Sleepy Pi which is attached on the Raspberry Pi knows that it is in RUNNING state</li>
+										</ul></small>
+									<li>Call <strong>start()</strong> function
+										<small class="text-muted"><ul>
+											<li>In start() function, get the current iteration which is stored in <strong>iteration_log.txt</strong></li>
+										</ul></small>
+									</li>
+									<li>Call <strong>main()</strong> function with the current iteration that we get from start() function
+										<small class="text-muted"><ul>
+											<li>Call <strong>job_cycle()</strong> from main() function, where <strong><a href="" ng-click="goToAnchor('Main.py')" >Main.py</a></strong> program will be called</li>
+											<li>Add 1 to current iteration</li>
+											<li>If current iteration == total iteration, set condition to LAST_ITERATION</li>
+											<li>If current iteration < total iteration, set condition to SHUTDOWN</li>
+										</ul></small>
+									</li>
+									<li>Shutdown the RPi (for <strong>With Sleepy Pi</strong> implementation)</li>
+									<li>Exit the program (for <strong>No Sleepy Pi</strong> implementation)</li>
+								</ol>
+
+							</li>
+							<br>
+							<li>P/S : For <strong>With Sleepy Pi</strong> implementation
+								<ul>
+									<li>Before finished its execution, the SleepyPi.py will send a SHUTDOWN signal to Sleepy Pi and shutdown the RaspberryPi</li>
+									<li>Once Sleepy Pi received the SHUTDOWN signal, it will power up the Raspberry again after
+										<strong>(SLEEP_TIME - EXECUTION_TIME)</strong></li>
+								</ul>
+							</li>
 						</ul>
 					</li>
 
 
 
+					<!--###################################################### UPDATER ###################################################-->					
+					<a name="Main.py"></a>
+					<li class="list-group-item">
+						<h4>Main.py<br><small>/home/pi/bin/software/python/Main.py</small></h4>
+						<ul>
+							<li>The main task of this program is to interact with cameras attached to the Raspberry Pi</li>
+							<li>What can <strong>Main.py</strong> do?
+
+<pre><code>Job Cycle<ul><li>"sudo python Main.py [current_iteration] [total_iteration]"</li><li>Called from main() function from <strong><a href="" ng-click="goToAnchor('SleepyPi.py')" >SleepyPi.py</a></strong></li></ul>
+Charge Cycle<ul><li>"sudo python Main.py --charge-[type] [current_iteration] [total_iteration]"</li><li>Called from <strong><a href="" ng-click="goToAnchor('master.rb')" >master.rb</a></strong></li></ul></code></pre>	
+
+							</li>
+							<br>
+							<li><h4>Job Cycle Operation</h4>
+								<ol>
+									<li>Initiliazation
+										<small class="text-muted"><ul>
+											<li>Get current disk storage of the RPi</li>
+											<li>Initialize all cameras attached to the Raspberry Pi</li>
+											<li>Get current time (from cameras)</li>
+										</ul></small>	
+									</li>
+
+									<li>Writing client information
+										<small class="text-muted"><ul>
+											<li>The info is written in <strong>client.info</strong> and <strong>client.latest.info</strong></li>
+										</ul></small>	
+									</li>
+
+									<li>Download latest photos from each camera
+										<small class="text-muted"><ul>
+											<li>This operation is handled by <strong><a href="" ng-click="goToAnchor('download_photo.py')" >download_photo.py</a></strong> program</li>
+										</ul></small>											
+									</li>
+
+									<li>Run <strong><a href="" ng-click="goToAnchor('client.rb')" >client.rb</a></strong>
+										<small class="text-muted"><ul>
+											<li>To send latest information and photos to the Server Pi</li>
+										</ul></small>											
+									</li>
+
+									<li>Take picture with all cameras
+										<small class="text-muted"><ul>
+											<li>After the camera lens is opened it cannot be closed unless the power to the camera is cut</li>
+											<li>This is why this operation is the last one in job cycle</li>
+											<li>After this operation, the RPi will shutdown (for With Sleepy Pi Implementation)</li>
+											<li>Or the power to usb port will be cut (for No Sleepy Pi Implementation)</li>
+										</ul></small>											
+									</li>
+
+								</ol>
+							</li>
+
+						</ul>
+					</li>
+
+
 				</ul>
 			</div>
-			</div>
-		</div>
-		
-		<br>
-
-		<!---------------------------------------------------------------------------------------------------------------------->
-		<!--------------------------------------------------- SLEEPY PI -------------------------------------------------------->
-		
-		<div class="row">	
-			<div class="container">
-				<button type="button" class="btn btn-success btn-block" data-toggle="collapse" data-target="#sleepypi">Sleepy Pi</button>
-				<div id="sleepypi" class="collapse text-left">
-					<h4>~/bin/software/python/SleepyPi.py</h4>
-					<ul class="list-group">
-						<li class="list-group-item">Raspberry Pi communicate with the Sleepy Pi attached to it through this program</li>
-						<li class="list-group-item">This program used two GPIO pins (GPIO 24 and GPIO 25) to signal the current condition to Sleepy Pi.<br>
-							Below the the list of condition that this program used:<br>
-							<ul>
-							  <li>SHUTDOWN</li>
-							  <li>RUNNING</li>
-							  <li>START OF THE DAY</li>
-							  <li>LAST ITERATION</li>
-							  <li>USER SESSION</li>
-							</ul>
-						</li>
-						<li class="list-group-item">Other thing that this program do is to get the configuration from program.conf 
-							and call the Main.py based on that configuration<br>
-							Below are the list of configuration that can be modified from the server or from the client itself:<br>
-							<ul>
-							  <li>Work Hour</li>
-							  <li>Photo per Hour</li>
-							</ul>
-						</li>
-						<li class="list-group-item">After the Main.py finished its execution, the SleepyPi.py will send a SHUTDOWN signal to SleepyPi and shutdown the RaspberryPi</li>
-						<li class="list-group-item">After 10 minutes, SleepyPi will power up the RaspberryPi again to begin a new iteration</li>
-
-					</ul>
-				</div>
-			</div>
-		</div>
-		
-		<br>
-		
-		<!---------------------------------------------------------------------------------------------------------------------->
-		<!------------------------------------------------------ MAIN ---------------------------------------------------------->
-		
-		<div class="row">	
-			<div class="container">
-				<button type="button" class="btn btn-secondary btn-block" data-toggle="collapse" data-target="#main">Main</button>
-				<div id="main" class="collapse text-left">
-					<h4>~/bin/software/python/Main.py</h4>
-					<ul class="list-group">
-						<li class="list-group-item">The main task of this program is to interact with all the cameras attached to the Raspberry Pi</li>
-						<li class="list-group-item">First it will try to detect all the cameras attached to the usb port and record the latest camera information in latest_camera.info</li>
-						<li class="list-group-item">Then, it will call the <strong>download_photo.py</strong> to download the latest photo from all the cameras to the Client Pi<br>
-							There will be a 3 minute timeout for this.
-						</li>
-						<li class="list-group-item">Lastly the Main.py will send command to each of the cameras to take picture<br>
-							And there also will be a 3 minute timeout for this task.
-						</li>
-					</ul>
-				</div>
 			</div>
 		</div>
 </div>
