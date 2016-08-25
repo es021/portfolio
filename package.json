@@ -1,7 +1,7 @@
 {
   "name": "My Portfolio",
-  "version": "1.1.1",
-  "description": "My Portfolio by Wan Zulsarhan Wan Shaari",
+  "version": "2.1.1",
+  "description": "My Portfolio",
   "scripts": {
     "start": "node server.js"
   },
@@ -11,6 +11,6 @@
     "url": "https://github.com/es021/portfolio.git"
   },
   "dependencies": {
-    "express": "^4.13.4",
+    "express": "^4.13.4"
   }
 }
