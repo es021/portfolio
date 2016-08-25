@@ -12,8 +12,8 @@ app.config(function($routeProvider) {
         templateUrl : "view/system_flow.html"
     })
 
-    .when("/code", {
-        templateUrl : "view/code.html"
+    .when("/protocol", {
+        templateUrl : "view/protocol.html"
     })
 
     .when("/team", {
