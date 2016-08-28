@@ -1,10 +1,135 @@
 <div class="container text-center">
-	<h2>System Protocol<br>
-		<small>Server Interface<br>Charging The Dead Camera<br>DigiCamControl</small>
-	</h2>
-	<br>
-	<iframe src="document/ImagingAndNetworkSystem.pdf" style="width: 100%; height:700px;"
- frameborder="0"></iframe>
+	<h1>System Protocol</h1>
+	<a href="" ng-click="goToAnchor('server_interface')">Accessing Server Interface</a><br>
+	<a href="" ng-click="goToAnchor('charge_camera')">Charging Dead Camera</a><br>
+	<a href="" ng-click="goToAnchor('serial_number')">Updating Camera Serial Number</a>
 
+	<div class="text-left">
+		<a name="server_interface"></a>					
+		<h3>Accessing Server Interface</h3>
+		<ul class="list-group">
+			<li class="list-group-item">
+				Once the Server Pi finished boots up, we can access to it's interface. Below are the instruction on how to do that.
 
+				<h4>Pre-requisite</h4>
+				<ol>
+					<li><strong>Install PuTTY</strong>
+						<ul>
+							<li>Download PuTTY <strong><a target="_blank" href="http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html">HERE</a>
+							</strong>
+							</li>
+							<li>For Windows, download the one circled in red in image below: <br>
+								<br><a target="_blank" href="img/putty.jpg"><img style="width:100%; max-width:600px" src="img/putty.jpg"></a></li>
+						</ul>
+					</li>
+					<br><br>
+					<li><strong>Setup a new session in PuTTY</strong>
+						<ul>
+							<li>Host Name : pi@169.254.0.4</li>
+							<li>Port : 22</li>
+							<li>Connection type: SSH</li>
+							<li>Saved Session : Server</li>
+							<li>Click <strong>Save</strong> to save the setup</li>
+							<li>Click <strong>Open</strong> to start the session</li>
+							<br>
+							<a target="_blank" href="img/putty2.jpg"><img style="width:100%; max-width:500px" src="img/putty2.jpg"></a>
+						</ul>
+					</li>
+				</ol>
+					<br><br>
+				<h4>How To Access The Server Interface?</h4>
+				<ol>
+					<li><strong>Login into Server Pi</strong>
+						<ul>
+							<li>Open a SSH connection to the Server using PuTTY</li>
+							<li>Password : <strong>raspberry</strong></li>
+							<li>After successfully login, press enter to cancel the <strong><a href="#/system_flow#server.profile">.profile</a></strong> execution</li>
+						</ul>
+					</li>
+					<br>
+					<li><strong>Check the Server Storage</strong>
+						<ul>
+							<li>Type in <code>df</code></li>
+							<li>At the very bottom should has a storage for <code>western_digital</code> which is the hard disk</li>
+							<li>If there is no western_digital, it means that the hard disk is not mounted properly</li>
+							<li>To mount the hard disk :
+<pre><code>> cd bin/other
+> sudo ./mount_wd.sh</code></pre>							
+							</li>
+						</ul>
+					</li>
+					
+					<br>
+					<li><strong>Get into Server interface mode</strong>
+						<ul>
+							<li>Type in <code>screen -raAd</code></li>
+							<li>List of command available in Server Interface
+							<ul>
+							<li><code>overview</code> - see overview of the system</li>
+							<li><code>help</code> - see list of commands</li>
+							<li><code>node list</code> - see all the nodes (clients) connected</li>
+							<li><code>node list v</code> - see the details of all the nodes (clients) connected</li>
+							<li><code>node[x]</code> - see more details of node 'x' (eg: node0, node1)</li>
+							<ul>
+							</li>
+						</ul>	
+
+						
+					</li>
+				</ol>
+			</li>
+		</ul>
+		<br>
+		<a name="charge_camera"></a>					
+		<h3>Charging Dead Camera</h3>
+		<ul class="list-group">
+			<li class="list-group-item">
+				<h4>Checking the <strong>battery level</strong> of camera</h4>
+				<ol>
+					<li>
+						Through Server Interface
+						<ul>
+							<li>Go through all the nodes, node0, node1, node2...</li>
+							<li>Identify the camera that has battery less than 65%</li>
+							<li>Charge the camera</li>
+						</ul>
+					</li>
+					<br>
+					<li>
+						Using <strong>ClientInfo.py</strong><br>
+						<small class="text-muted">/home/pi/bin/user_tools/ClientInfo.py</small>
+
+						<ul>
+							<li>Since all the client information were sent to server each time the Client Pi run <strong><a href="#/system_flow#client.rb">client.rb, </a></strong> so we also can check the status of client using <strong>ClientInfo.py</strong></li>
+							<li>Go to <code>/home/pi/bin/user_tools</code></li>
+							<li>Run the following command:<br>
+								<code>sudo python ClientInfo.py --ls-all</code>
+							</li>
+							
+						</ul>						
+					</li>
+					<br>
+					<li>
+						Using DigiCamControl software
+						<ul>
+							<li>Donwload DigiCamControl <strong><a target="_blank" href="http://www.digicamcontrol.com/download">HERE</a></strong></li>
+							<li>Download the <strong>stable version</strong></li>
+							<li>We can see the battery level of the camera connected to computers using DigiCamControl software</li>
+							<br>
+							<a target="_blank" href="img/digicam.jpg"><img style="width:100%; max-width:700px" src="img/digicam.jpg"></a>
+
+						</ul>
+					</li>
+				</ol>
+			</li>
+		</ul>
+		<br>
+		<a name="serial_number"></a>					
+		<h3>Updating Camera Serial Number</h3>
+		<ul class="list-group">
+			<li class="list-group-item">
+
+			</li>
+		</ul>
+	</div>
 </div>
