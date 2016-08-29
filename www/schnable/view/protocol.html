@@ -128,6 +128,23 @@
 		<h3>Updating Camera Serial Number</h3>
 		<ul class="list-group">
 			<li class="list-group-item">
+				<ul>
+				<li>	
+					In order for the Raspberry Pi to recognize the camera, the serial number of the camera has to be registered in <code>/etc/udev/rules.d/99-usb-serial.rules</code> file.
+				</li>
+				<br>
+				<li><h4>How to Register New Camera Serial Number?</h4>
+					<ol>
+						<li>Go to <code>/home/pi/bin/other</code>
+						<li>Add or edit serial number in <code>UpdatedSerialCodelist.csv</code></li>
+						<li>Run <code>python assign-serial.py</code>
+						<li>Done! Now the SD card has the latest updated serial number</li>
+					</ol>
+				</li>
+				<br>
+				<li class="text-muted">P/S : Everytime the serial list is updated, a new image for Client Pi has to be read from the SD card and written to every other Client Pi SD cards</li>
+
+				</ul>
 
 			</li>
 		</ul>
